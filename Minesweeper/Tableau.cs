@@ -108,11 +108,11 @@ namespace Tableau_jeux
                 {
                     if ((x >= _grandeur_tab || y >= _grandeur_tab)
                         || (x < 0 || y < 0)
-                        || bouton.Text != "")
+                        || bouton.Text != " ")
                         continue; 
 
-                    bouton = Get_buton(x, y);
-                    Index_bouton(y, x, bouton, true);
+                    bouton = Get_buton(y, x);
+                    Index_bouton(x, y, bouton, true);
                 }
             }
 
@@ -129,8 +129,8 @@ namespace Tableau_jeux
                 case 0:
                     bouton.Text = " ";
 
-                    //if (!is_cas_zero_in)
-                    Cas_zero(ligne, colonne, bouton);
+                    if (!is_cas_zero_in)
+                        Cas_zero(ligne, colonne, bouton);
                     break;
 
                 case 1:

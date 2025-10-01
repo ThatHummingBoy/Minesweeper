@@ -53,7 +53,7 @@ namespace Minesweeper
                     var ctrl = grille_UI.GetControlFromPosition(j, i);
                     if (ctrl is Button bouton)
                     {
-                        tableau_jeux.Index_bouton(i, j, bouton);
+                        tableau_jeux.Index_bouton(i, j, bouton, false);
                         bouton.Enabled = false; // Désactive les boutons après abandon
                     }
                 }
