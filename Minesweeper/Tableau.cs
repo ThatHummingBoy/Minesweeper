@@ -7,6 +7,7 @@ namespace Tableau_jeux
     public class Tableau
     {
         private int _grandeur_tab;
+        private TableLayoutPanel _grille_UI;
         protected int[][] _tableau;
 
         public Tableau(int grandeur_tab)
@@ -99,14 +100,16 @@ namespace Tableau_jeux
             return _grandeur_tab;
         }
 
-        public void Cas_zero(Tuple<int, int> coordonne_zero_init, Button bouton)
+        public void Cas_zero(int ligne, int colonne, Button bouton)
         {
-            int i = coordonne_zero_init.Item1;
-            int j = coordonne_zero_init.Item2;
+            if (_grille_UI.GetControlFromPosition(colonne, ligne) as Button == null)
+                return;
 
-            for (int y = i - 1; y <= i + 1; y++)
+            bouton = _grille_UI.GetControlFromPosition(colonne, ligne) as Button;
+
+            for (int y = colonne - 1; y <= colonne + 1; y++)
             {
-                for (int x = j - 1; x <= j + 1; x++)
+                for (int x = ligne - 1; x <= ligne + 1; x++)
                 {
                     if ((x >= _grandeur_tab || y >= _grandeur_tab)
                         || (x < 0 || y < 0)
@@ -121,15 +124,14 @@ namespace Tableau_jeux
         }
 
         public void Index_bouton(int ligne, int  colonne, Button bouton)
-        {
+        {            
             bouton.BackColor = Color.FromArgb(192, 192, 192);
-            bouton.Tag = (ligne, colonne);
 
             switch (Retour_case(colonne, ligne))
             {
                 case 0:
                     bouton.Text = " ";
-                    Cas_zero(new Tuple<int, int>(ligne, colonne), bouton);
+                    Cas_zero(ligne, colonne, bouton);
                     break;
 
                 case 1:
@@ -176,6 +178,13 @@ namespace Tableau_jeux
                     bouton.BackColor = Color.Yellow;
                     break;
             }
+
+            return;
+        }
+
+        public void Set_Grille_UI(TableLayoutPanel grille_UI)
+        {
+            _grille_UI = grille_UI;
 
             return;
         }

@@ -8,7 +8,7 @@
         private FlowLayoutPanel bandeauHaut;
         private Button boutonReinitialiser;
 
-        private TableLayoutPanel grille_UI;
+        public TableLayoutPanel grille_UI;
 
         protected override void Dispose(bool disposing)
         {
