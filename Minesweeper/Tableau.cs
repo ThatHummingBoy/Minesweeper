@@ -88,10 +88,10 @@ namespace Tableau_jeux
         {
             return _tableau[colonne][ligne];
         }
-
+        
         public void Changer_grandeur_tab(int nouv_grandeur)
         {
-            _grandeur_tab = nouv_grandeur;
+            _grandeur_tab = nouv_grandeur;            
         }
 
         public int Get_grandeur_tab()

@@ -8,6 +8,7 @@ namespace Minesweeper
     public partial class Form1 : Form
     {
         Tableau tableau_jeux = new Tableau(10);
+        Font indice_case = new Font("Segoe UI", 3f, FontStyle.Regular);
 
         public Form1()
         {
