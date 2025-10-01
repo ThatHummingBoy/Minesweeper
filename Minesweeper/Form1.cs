@@ -8,6 +8,7 @@ namespace Minesweeper
     public partial class Form1 : Form
     {
         Tableau tableau_jeux = new Tableau(10);
+        Font indice_case = new Font("Segoe UI", 3f, FontStyle.Regular);
 
         public Form1()
         {
@@ -18,7 +19,7 @@ namespace Minesweeper
 
         private void boutonReinitialiser_Click(object sender, EventArgs e)
         {
-            foreach (Control ctrl in grille10x10.Controls)
+            foreach (Control ctrl in grille_UI.Controls)
             {
                 if (ctrl is Button bouton)
                 {
