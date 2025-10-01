@@ -102,11 +102,6 @@ namespace Tableau_jeux
 
         public void Cas_zero(int ligne, int colonne, Button bouton)
         {
-            if (_grille_UI.GetControlFromPosition(colonne, ligne) as Button == null)
-                return;
-
-            bouton = _grille_UI.GetControlFromPosition(colonne, ligne) as Button;
-
             for (int y = colonne - 1; y <= colonne + 1; y++)
             {
                 for (int x = ligne - 1; x <= ligne + 1; x++)
@@ -114,23 +109,27 @@ namespace Tableau_jeux
                     if ((x >= _grandeur_tab || y >= _grandeur_tab)
                         || (x < 0 || y < 0)
                         || bouton.Text != "")
-                        continue;
+                        continue; 
 
-                    Index_bouton(y, x, bouton);
+                    bouton = Get_buton(x, y);
+                    Index_bouton(y, x, bouton, true);
                 }
             }
 
             return;
         }
 
-        public void Index_bouton(int ligne, int  colonne, Button bouton)
+        public void Index_bouton(int ligne, int  colonne, Button bouton, bool is_cas_zero_in)
         {            
+            bouton = Get_buton(colonne, ligne);
             bouton.BackColor = Color.FromArgb(192, 192, 192);
 
             switch (Retour_case(colonne, ligne))
             {
                 case 0:
                     bouton.Text = " ";
+
+                    //if (!is_cas_zero_in)
                     Cas_zero(ligne, colonne, bouton);
                     break;
 
@@ -180,6 +179,11 @@ namespace Tableau_jeux
             }
 
             return;
+        }
+
+        private Button Get_buton(int colonne, int ligne)
+        {
+            return _grille_UI.GetControlFromPosition(colonne, ligne) as Button;
         }
 
         public void Set_Grille_UI(TableLayoutPanel grille_UI)

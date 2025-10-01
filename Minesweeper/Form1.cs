@@ -39,7 +39,7 @@ namespace Minesweeper
                 int colonne = position.Item2;
 
                 tableau_jeux.Set_Grille_UI(grille_UI);
-                tableau_jeux.Index_bouton(ligne, colonne, bouton);
+                tableau_jeux.Index_bouton(ligne, colonne, bouton, false);
             }
         }
 
