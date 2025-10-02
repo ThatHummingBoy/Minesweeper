@@ -1,6 +1,6 @@
 ﻿namespace Minesweeper
 {
-    partial class Form1
+    partial class FormDemineur
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -24,6 +24,7 @@
             boutonReinitialiser = new Button();
             buttonAbandon = new Button();
             grille_UI = new TableLayoutPanel();
+            backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             panneauPrincipal.SuspendLayout();
             bandeauHaut.SuspendLayout();
             SuspendLayout();
@@ -41,7 +42,7 @@
             panneauPrincipal.RowCount = 2;
             panneauPrincipal.RowStyles.Add(new RowStyle());
             panneauPrincipal.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            panneauPrincipal.Size = new Size(594, 579);
+            panneauPrincipal.Size = new Size(640, 700);
             panneauPrincipal.TabIndex = 0;
             // 
             // bandeauHaut
@@ -53,7 +54,7 @@
             bandeauHaut.Location = new Point(13, 13);
             bandeauHaut.Name = "bandeauHaut";
             bandeauHaut.Padding = new Padding(0, 0, 0, 6);
-            bandeauHaut.Size = new Size(568, 48);
+            bandeauHaut.Size = new Size(614, 48);
             bandeauHaut.TabIndex = 0;
             bandeauHaut.WrapContents = false;
             // 
@@ -87,17 +88,17 @@
             grille_UI.Dock = DockStyle.Fill;
             grille_UI.Location = new Point(13, 67);
             grille_UI.Name = "grille_UI";
-            grille_UI.Size = new Size(568, 499);
+            grille_UI.Size = new Size(614, 620);
             grille_UI.TabIndex = 1;
             // 
-            // Form1
+            // FormDemineur
             // 
-            ClientSize = new Size(594, 579);
+            ClientSize = new Size(640, 700);
             Controls.Add(panneauPrincipal);
             MinimumSize = new Size(380, 460);
-            Name = "Form1";
+            Name = "FormDemineur";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Jeu du Tic-Tac-Toe";
+            Text = "Jeu Démineur";
             panneauPrincipal.ResumeLayout(false);
             panneauPrincipal.PerformLayout();
             bandeauHaut.ResumeLayout(false);
@@ -120,40 +121,42 @@
         }
 
         // Création dynamique de la grille de boutons
-        private void CreerGrilleDynamique(int taille)
+        private void CreerGrilleDynamique(int longueur, int hauteur)
         {
             // Nettoyer l'ancienne grille si besoin
             grille_UI.Controls.Clear();
             grille_UI.RowStyles.Clear();
             grille_UI.ColumnStyles.Clear();
 
-            grille_UI.RowCount = taille;
-            grille_UI.ColumnCount = taille;
+            grille_UI.RowCount = hauteur;
+            grille_UI.ColumnCount = longueur;
 
-            float pourcentage = 100f / taille;
+            float pourcentage = 100f / (hauteur * longueur);
 
             // Ajouter les styles pour chaque ligne
-            for (int i = 0; i < taille; i++)
+            for (int i = 0; i < hauteur; i++)
                 grille_UI.RowStyles.Add(new RowStyle(SizeType.Percent, pourcentage));
             // Ajouter les styles pour chaque colonne
-            for (int i = 0; i < taille; i++)
+            for (int i = 0; i < longueur; i++)
                 grille_UI.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, pourcentage));
 
             Font font_indice_case = new Font("Segoe UI", 8, FontStyle.Regular);
 
-            for (int ligne = 0; ligne < taille; ligne++)
+            for (int ligne = 0; ligne < hauteur; ligne++)
             {
-                for (int col = 0; col < taille; col++)
+                for (int col = 0; col < longueur; col++)
                 {
                     var bouton = CreerBoutonCase();
                     bouton.Tag = (ligne, col);
                     bouton.Text = "";
                     bouton.Font = font_indice_case;
-                    bouton.Click += BoutonGrille_Click;
+                    bouton.MouseDown += BoutonGrille_MouseDown;
+
                     grille_UI.Controls.Add(bouton, col, ligne);
                 }
             }
         }
         private Button buttonAbandon;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

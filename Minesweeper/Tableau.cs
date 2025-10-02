@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Minesweeper;
+using System;
+using System.ComponentModel;
 using static System.Windows.Forms.LinkLabel;
-using Minesweeper;
 
 namespace Tableau_jeux
 {
@@ -54,13 +55,23 @@ namespace Tableau_jeux
                 }
             }
         }
+        public void Reinitialiser_val_cases()
+        {
+            for (int y = 0; y < _grandeur_tab; y++)
+            {
+                for (int x = 0; x < _grandeur_tab; x++)
+                {
+                    _tableau[y][x] = 0;
+                }
+            }
+        }
 
         public void Creer_jeux()
         {
             Random random = new Random();
             int nbr_mines = (_grandeur_tab * _grandeur_tab) / 10;
 
-            /*for (int i = 0; i < nbr_mines; i++)
+            for (int i = 0; i < nbr_mines; i++)
             {
                 int ligne_new = random.Next(0, _grandeur_tab);
                 int colonne_new = random.Next(0, _grandeur_tab);
@@ -69,18 +80,7 @@ namespace Tableau_jeux
                     ++nbr_mines;
 
                 _tableau[colonne_new][ligne_new] = 10;
-            }*/
-
-            _tableau[0][0] = 10;
-            _tableau[2][1] = 10;
-            _tableau[3][1] = 10;
-            _tableau[4][1] = 10;
-            _tableau[2][2] = 10;
-            _tableau[4][2] = 10;
-            _tableau[2][3] = 10;
-            _tableau[3][3] = 10;
-            _tableau[4][3] = 10;
-            _tableau[9][0] = 10;
+            }
 
             Creer_typo();
         }
@@ -100,42 +100,50 @@ namespace Tableau_jeux
             return _grandeur_tab;
         }
 
-        public void Cas_zero(int ligne, int colonne, Button bouton)
+        public void Cas_zero(int ligne, int colonne, Button bouton, HashSet<(int, int)> visited)
         {
+            if (!visited.Add((ligne, colonne)))
+                return; // déjà traité
+
             for (int y = colonne - 1; y <= colonne + 1; y++)
             {
                 for (int x = ligne - 1; x <= ligne + 1; x++)
                 {
-                    if ((x >= _grandeur_tab || y >= _grandeur_tab)
-                        || (x < 0 || y < 0))
+                    if ((x >= _grandeur_tab || y >= _grandeur_tab) || (x < 0 || y < 0))
                         continue;
 
-                    bouton = Get_buton(y, x);
+                    var btn = Get_buton(y, x);
 
-                    if (bouton.Text == " ")
+                    if (btn.Text == " ")
                         continue;
 
-                    Index_bouton(x, y, bouton, true);
+                    Index_bouton(x, y, btn, true, visited);
+
+                    if (Retour_case(y, x) == 0)
+                        Cas_zero(x, y, btn, visited);
                 }
             }
-
-            return;
         }
 
-        public void Index_bouton(int ligne, int  colonne, Button bouton, bool is_cas_zero_in)
-        {            
+        public void Index_bouton(int ligne, int colonne, Button bouton, bool is_cas_zero_in, HashSet<(int, int)>? visited = null)
+        {
             bouton = Get_buton(colonne, ligne);
             bouton.BackColor = Color.FromArgb(192, 192, 192);
+
+            if (Is_game_over())
+                Game_over(true);
 
             switch (Retour_case(colonne, ligne))
             {
                 case 0:
                     bouton.Text = " ";
-
                     if (!is_cas_zero_in)
-                        Cas_zero(ligne, colonne, bouton);
+                    {
+                        if (visited == null)
+                            visited = new HashSet<(int, int)>();
+                        Cas_zero(ligne, colonne, bouton, visited);
+                    }
                     break;
-
                 case 1:
                     bouton.ForeColor = Color.FromArgb(0, 0, 255);
                     bouton.Text = "1";
@@ -177,7 +185,10 @@ namespace Tableau_jeux
                     break;
 
                 case 10:
-                    bouton.BackColor = Color.Yellow;
+                    bouton.Text = "💣";
+
+                    if(!is_cas_zero_in)
+                        Game_over(false);
                     break;
             }
 
@@ -194,6 +205,44 @@ namespace Tableau_jeux
             _grille_UI = grille_UI;
 
             return;
+        }
+        public void Game_over(bool is_victoire)
+        {
+            for (int i = 0; i < _grandeur_tab; i++)
+            {
+                for (int j = 0; j < _grandeur_tab; j++)
+                {
+                    Button bouton = Get_buton(j, i);
+
+                    Index_bouton(i, j, bouton, true);
+                    bouton.BackColor = is_victoire ? Color.Green : Color.Red;
+                    bouton.Enabled = false;
+                }
+            }
+        }
+
+        public bool Is_game_over()
+        {
+            int nbr_cases_cacher = _grandeur_tab * _grandeur_tab;
+            Button bouton;
+
+            for (int i = 0; i < _grandeur_tab; i++)
+            {
+                for (int j = 0; j < _grandeur_tab; j++)
+                {
+                    bouton = Get_buton(j, i);
+
+                    if (bouton == null)
+                        continue;
+                    else if (bouton.Text != "" || bouton.Text == "🚩")
+                        --nbr_cases_cacher;
+                }
+            }
+
+            if (((_grandeur_tab * _grandeur_tab) / 10) == nbr_cases_cacher)
+                return true;
+
+            return false;
         }
     }
 }

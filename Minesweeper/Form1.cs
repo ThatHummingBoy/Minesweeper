@@ -1,24 +1,26 @@
-using System;
+ï»¿using System;
 using System.Net.Http.Headers;
 
 using Tableau_jeux;
 
 namespace Minesweeper
 {
-    public partial class Form1 : Form
+    public partial class FormDemineur : Form
     {
         Tableau tableau_jeux = new Tableau(10);
         Font indice_case = new Font("Segoe UI", 3f, FontStyle.Regular);
 
-        public Form1()
+        public FormDemineur()
         {
             InitializeComponent();
-            CreerGrilleDynamique(10);
+            CreerGrilleDynamique(10, 10);
             tableau_jeux.Creer_jeux();
         }
 
         private void boutonReinitialiser_Click(object sender, EventArgs e)
         {
+            tableau_jeux.Reinitialiser_val_cases();
+
             foreach (Control ctrl in grille_UI.Controls)
             {
                 if (ctrl is Button bouton)
@@ -28,37 +30,41 @@ namespace Minesweeper
                     bouton.Enabled = true;
                 }
             }
-            tableau_jeux.Creer_jeux(); // Regénère le plateau
+            tableau_jeux.Creer_jeux();
+        }
+        private void buttonAbandon_Click(object sender, EventArgs e)
+        {
+            tableau_jeux.Game_over();
         }
 
-        private void BoutonGrille_Click(object? sender, EventArgs e)
+        private void BoutonGrille_MouseDown(object? sender, MouseEventArgs e)
         {
             if (sender is Button bouton && bouton.Tag is ValueTuple<int, int> position)
             {
                 int ligne = position.Item1;
                 int colonne = position.Item2;
 
-                tableau_jeux.Set_Grille_UI(grille_UI);
-                tableau_jeux.Index_bouton(ligne, colonne, bouton, false);
-            }
-        }
-
-        private void buttonAbandon_Click(object sender, EventArgs e)
-        {
-            tableau_jeux.Set_Grille_UI(grille_UI);
-            for (int i = 0; i < tableau_jeux.Get_grandeur_tab(); i++)
-            {
-                for (int j = 0; j < tableau_jeux.Get_grandeur_tab(); j++)
+                if (e.Button == MouseButtons.Right)
                 {
-                    var ctrl = grille_UI.GetControlFromPosition(j, i);
-                    if (ctrl is Button bouton)
+                    if (bouton.Text == "ðŸš©")
                     {
-                        tableau_jeux.Index_bouton(i, j, bouton, false);
-                        bouton.Enabled = false; // Désactive les boutons après abandon
+                        bouton.BackColor = Color.White;
+                        bouton.Text = "";
                     }
+                    else
+                    {
+                        bouton.BackColor = Color.FromArgb(192, 192, 192);
+                        bouton.ForeColor = Color.Black;
+                        bouton.Text = "ðŸš©";
+                    }
+                }
+                else if (e.Button == MouseButtons.Left)
+                {
+                    tableau_jeux.Set_Grille_UI(grille_UI);
+                    tableau_jeux.Is_game_over();
+                    tableau_jeux.Index_bouton(ligne, colonne, bouton, false);
                 }
             }
         }
-
     }
 }
