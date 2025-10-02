@@ -107,11 +107,14 @@ namespace Tableau_jeux
                 for (int x = ligne - 1; x <= ligne + 1; x++)
                 {
                     if ((x >= _grandeur_tab || y >= _grandeur_tab)
-                        || (x < 0 || y < 0)
-                        || bouton.Text != " ")
-                        continue; 
+                        || (x < 0 || y < 0))
+                        continue;
 
                     bouton = Get_buton(y, x);
+
+                    if (bouton.Text == " ")
+                        continue;
+
                     Index_bouton(x, y, bouton, true);
                 }
             }
