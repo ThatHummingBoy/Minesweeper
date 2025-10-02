@@ -130,9 +130,6 @@ namespace Tableau_jeux
             bouton = Get_buton(colonne, ligne);
             bouton.BackColor = Color.FromArgb(192, 192, 192);
 
-            if (Is_game_over())
-                Game_over(true);
-
             switch (Retour_case(colonne, ligne))
             {
                 case 0:

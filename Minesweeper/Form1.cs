@@ -34,7 +34,8 @@ namespace Minesweeper
         }
         private void buttonAbandon_Click(object sender, EventArgs e)
         {
-            tableau_jeux.Game_over();
+            tableau_jeux.Set_Grille_UI(grille_UI);
+            tableau_jeux.Game_over(false);
         }
 
         private void BoutonGrille_MouseDown(object? sender, MouseEventArgs e)
@@ -43,6 +44,8 @@ namespace Minesweeper
             {
                 int ligne = position.Item1;
                 int colonne = position.Item2;
+
+                tableau_jeux.Set_Grille_UI(grille_UI);
 
                 if (e.Button == MouseButtons.Right)
                 {
@@ -60,10 +63,14 @@ namespace Minesweeper
                 }
                 else if (e.Button == MouseButtons.Left)
                 {
-                    tableau_jeux.Set_Grille_UI(grille_UI);
-                    tableau_jeux.Is_game_over();
+                    
                     tableau_jeux.Index_bouton(ligne, colonne, bouton, false);
                 }
+
+                tableau_jeux.Set_Grille_UI(grille_UI);
+
+                if (tableau_jeux.Is_game_over())
+                    tableau_jeux.Game_over(true);
             }
         }
     }
