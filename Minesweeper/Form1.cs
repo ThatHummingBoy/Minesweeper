@@ -1,4 +1,11 @@
-﻿using System;
+﻿//
+//  Programmé par: Nathan Boudreau
+//  Dernière modification: 2025-10-03
+//  Description: Le programme c# suivant simule le jeu Démineur
+//                  dans la difficulté pour les débutants.
+//
+
+using System;
 using System.Net.Http.Headers;
 
 using Tableau_jeux;
