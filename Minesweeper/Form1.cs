@@ -3,6 +3,7 @@
 //  Dernière modification: 2025-10-03
 //  Description: Le programme c# suivant simule le jeu Démineur
 //                  dans la difficulté pour les débutants.
+//                  (généralement les tableaux pour les débutants est de 9x9 cases)
 //
 
 using System;
